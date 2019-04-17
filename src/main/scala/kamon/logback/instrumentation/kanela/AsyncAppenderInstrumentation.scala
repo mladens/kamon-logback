@@ -21,7 +21,7 @@ import java.util.concurrent.Callable
 import kamon.Kamon
 import kamon.context.Context
 import kamon.logback.instrumentation.{ContextAwareLoggingEvent, Logback}
-import kamon.trace.{IdentityProvider, Span}
+import kamon.trace.{Identifier, Span}
 import kanela.agent.api.instrumentation.mixin.Initializer
 import kanela.agent.libs.net.bytebuddy.asm.Advice
 import kanela.agent.libs.net.bytebuddy.asm.Advice.Argument
@@ -109,11 +109,11 @@ object GetPropertyMapMethodInterceptor {
   @RuntimeType
   def aroundGetMDCPropertyMap(@SuperCall callable: Callable[_]): Any = {
     val currentContext = Kamon.currentContext()
-    val span = currentContext.get(Span.ContextKey)
+    val span = currentContext.get(Span.Key)
 
-    if (span.context().traceID != IdentityProvider.NoIdentifier && Logback.mdcContextPropagation){
-      MDC.put(Logback.mdcTraceKey, span.context().traceID.string)
-      MDC.put(Logback.mdcSpanKey, span.context().spanID.string)
+    if (span.trace.id != Identifier.Empty && Logback.mdcContextPropagation){
+      MDC.put(Logback.mdcTraceKey, span.trace.id.string)
+      MDC.put(Logback.mdcSpanKey, span.id.string)
 
       Logback.mdcKeys.foreach { key =>
         val localKeyValue = currentContext.get(key) match {
