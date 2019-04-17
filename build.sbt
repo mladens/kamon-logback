@@ -13,8 +13,8 @@
  * =========================================================================================
  */
 
-val kamonCore             = "io.kamon"        %%  "kamon-core"              % "1.2.0-M1"
-val kamonTestkit          = "io.kamon"        %%  "kamon-testkit"           % "1.2.0-M1"
+val kamonCore             = "io.kamon"        %%  "kamon-core"              % "2.0.0-07ebec0a2acd1ecd22a6cf41cb770e8daf39e3cc"
+val kamonTestkit          = "io.kamon"        %%  "kamon-testkit"           % "2.0.0-07ebec0a2acd1ecd22a6cf41cb770e8daf39e3cc"
 val kanelaScalaExtension  = "io.kamon"        %%  "kanela-scala-extension"  % "0.0.10"
 
 val logbackClassic  = "ch.qos.logback"  %   "logback-classic"    % "1.2.3"
@@ -26,16 +26,10 @@ lazy val root = (project in file("."))
       name := "kamon-logback",
       scalaVersion := "2.12.8"))
   .enablePlugins(JavaAgent)
-  .settings(javaAgents ++= resolveAgent)
+  .settings(javaAgents += "io.kamon" % "kanela-agent" % "0.0.15" % "compile;test")
   .settings(
     libraryDependencies ++=
       compileScope(kamonCore, logbackClassic, kanelaScalaExtension) ++
       testScope(kamonTestkit, scalatest))
 
-def resolveAgent: Seq[ModuleID] = {
-  val agent = Option(System.getProperty("agent")).getOrElse("aspectj")
-  if(agent.equalsIgnoreCase("kanela"))
-    Seq("org.aspectj" % "aspectjweaver" % "1.9.1" % "compile", "io.kamon" % "kanela-agent" % "0.0.15" % "compile;test")
-  else
-    Seq("org.aspectj" % "aspectjweaver" % "1.9.1" % "compile;test", "io.kamon" % "kanela-agent" % "0.0.15" % "compile")
-}
+
