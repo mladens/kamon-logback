@@ -14,14 +14,14 @@
  * =========================================================================================
  */
 
-package kamon.logback.instrumentation
-
+package kamon.instrumentation.logback
 
 import com.typesafe.config.Config
-import kamon.context.Context
-import kamon.Kamon
 import kamon.Configuration.OnReconfigureHook
+import kamon.Kamon
+import kamon.context.Context
 import kamon.context.Context.Key
+
 import scala.collection.JavaConverters._
 
 
