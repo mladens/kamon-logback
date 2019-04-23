@@ -15,21 +15,23 @@
 
 val kamonCore             = "io.kamon"        %%  "kamon-core"              % "2.0.0-07ebec0a2acd1ecd22a6cf41cb770e8daf39e3cc"
 val kamonTestkit          = "io.kamon"        %%  "kamon-testkit"           % "2.0.0-07ebec0a2acd1ecd22a6cf41cb770e8daf39e3cc"
-val kanelaScalaExtension  = "io.kamon"        %%  "kanela-scala-extension"  % "0.0.10"
+val kanelaScalaExtension  = "io.kamon"        %%  "kanela-scala-extension"  % "0.0.14"
+val kanelaAgent           = "io.kamon"        %   "kanela-agent"            % "0.0.21-SNAPSHOT" changing()
 
 val logbackClassic  = "ch.qos.logback"  %   "logback-classic"    % "1.2.3"
 
 resolvers += Resolver.bintrayRepo("kamon-io", "snapshots")
+resolvers += Resolver.mavenLocal
 
 lazy val root = (project in file("."))
   .settings(Seq(
       name := "kamon-logback",
       scalaVersion := "2.12.8"))
   .enablePlugins(JavaAgent)
-  .settings(javaAgents += "io.kamon" % "kanela-agent" % "0.0.15" % "compile;test")
+  .settings(javaAgents += "io.kamon" % "kanela-agent" % "0.0.19-SNAPSHOT" % "compile;test")
   .settings(
     libraryDependencies ++=
-      compileScope(kamonCore, logbackClassic, kanelaScalaExtension) ++
+      compileScope(kamonCore, logbackClassic, kanelaScalaExtension, kanelaAgent) ++
       testScope(kamonTestkit, scalatest))
 
 
